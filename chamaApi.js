@@ -89,7 +89,7 @@ function deletarUsuario(idUsuario){
     })
 
 }
-
+//ADICIONAR EVENTO DE CLIQUE NO BOTAO EXCLUIR
 document.addEventListener('click', function (event) {
     if(event.target && event.target.classList.contains('btn-delete')){
         const idUsuario = event.target.dataset.id;

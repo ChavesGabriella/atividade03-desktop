@@ -90,6 +90,13 @@ function deletarUsuario(idUsuario){
 
 }
 
+document.addEventListener('click', function (event) {
+    if(event.target && event.target.classList.contains('btn-delete')){
+        const idUsuario = event.target.dataset.id;
+        deletarUsuario(idUsuario);
+    }
+})
+
 //CONTINUAR DAQUI
 function buscarDadosEPreencherTabela() {
     // Faz uma requisição put para a API.

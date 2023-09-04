@@ -103,10 +103,28 @@ function buscarDadosEPreencherTabela() {
     axios.put(`http://infopguaifpr.com.br:3052/atualizarUsuario/${idUsuario}`)
         .then(response => {
             const usuarios = response.data.usuarios;
-            preencherTabela(usuarios);
+            preencherTabela(usuarios); 
+            document.querySelector('#nomeEditar').value = usuario.nome;
+            document.querySelector('#emailEditar').value = usuario.email;
+            document.querySelector('#disciplinaEditar').value = usuario.disciplina;
         })
         .catch(error => {
             // Em caso de erro, exibe uma mensagem de erro no console.
             console.error('Error :', error);
         });
 }
+
+function atualizarUsuario(){
+    axios.put(`http://infopguaifpr.com.br:3052/atualizarUsuario/${usuario.id}`).then(response =>{
+        console.log("Usuario foi editado com sucesso", response.data);
+        buscarDadosEPreencherTabela();
+    }).catch(error =>{
+        console.error('Error :', error);
+    });
+}
+document.querySelector("#btnEditarUsuario").addEventListener("click", function(){
+    const nome = document.querySelector("#nomeEditar").value;
+    const email = document.querySelector("#emailEditar").value;
+    const disciplina = document.querySelector("#disciplinaEditar").value;
+    editarUsuario(usuario, nome, email, disciplina);
+});

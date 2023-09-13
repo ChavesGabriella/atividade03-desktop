@@ -21,6 +21,24 @@ function buscarDadosEPreencherTabela() {
         });
 }
 
+function buscarDadosEPreencherTabelaAPILocal() {
+    // Faz uma requisição GET para a API.
+    axios.get('http://localhost:3000/listarTodosUsuarios')
+        .then(response => {
+            console.log(response)
+
+            // Obtém a lista de usuários da resposta.
+            const usuarios = response.data.usuarios;
+
+            // Chama a função para preencher a tabela com os usuários.
+            preencherTabela(usuarios);
+        })
+        .catch(error => {
+            // Em caso de erro, exibe uma mensagem de erro no console.
+            console.error('Error fetching character data:', error);
+        });
+}
+
 // Função que preenche a tabela com os dados dos usuários.
 function preencherTabela(usuarios) {
     // Para cada usuário na lista...
@@ -75,12 +93,15 @@ const botaoChamarAPI = document.getElementById('botaoChamarAPI');
 // Adiciona um ouvinte de evento para o clique no botão.
 botaoChamarAPI.addEventListener('click', () => {
     // Quando o botão é clicado, chama a função para buscar dados e preencher a tabela.
-    buscarDadosEPreencherTabela();
+     //  buscarDadosEPreencherTabela();
+    buscarDadosEPreencherTabelaAPILocal();
 
 });
+
+
 //FUNCAO DELETAR
 function deletarUsuario(idUsuario){
-    axios.delete(`http://infopguaifpr.com.br:3052/deletarUsuario/${idUsuario}`).then(response =>{
+    axios.delete(`http://localhost:3000/deletarUsuario/${idUsuario}`).then(response =>{
         console.log('Usuario excluido com sucesso!')
         buscarDadosEPreencherTabela();
     })
@@ -98,24 +119,58 @@ document.addEventListener('click', function (event) {
 })
 
 //CONTINUAR DAQUI
-function buscarDadosEPreencherTabela() {
-    // Faz uma requisição put para a API.
-    axios.put(`http://infopguaifpr.com.br:3052/atualizarUsuario/${idUsuario}`)
-        .then(response => {
-            const usuarios = response.data.usuarios;
-            preencherTabela(usuarios); 
-            document.querySelector('#nomeEditar').value = usuario.nome;
-            document.querySelector('#emailEditar').value = usuario.email;
-            document.querySelector('#disciplinaEditar').value = usuario.disciplina;
-        })
-        .catch(error => {
-            // Em caso de erro, exibe uma mensagem de erro no console.
-            console.error('Error :', error);
-        });
+// function buscarDadosEPreencherTabela() {
+//     // Faz uma requisição put para a API.
+//     axios.put(`localhost:3000/atualizarUsuario/${idUsuario}`)
+//         .then(response => {
+//             const usuarios = response.data.usuarios;
+//             preencherTabela(usuarios); 
+//             document.querySelector('#nomeEditar').value = usuario.nome;
+//             document.querySelector('#emailEditar').value = usuario.email;
+//             document.querySelector('#disciplinaEditar').value = usuario.disciplina;
+//         })
+//         .catch(error => {
+//             // Em caso de erro, exibe uma mensagem de erro no console.
+//             console.error('Error :', error);
+//         });
+// }
+
+function cadastrarUsuario(nome, email, disciplina, senha){
+    console.log('Dados capturados para Cadastro')
+    console.log('Nome:', nome)
+    console.log('Email:', email)
+    console.log('Disciplina:', disciplina)
+    console.log('Senha:', senha)
 }
 
+const novoUsuario = {
+    nome: nome,
+    email: email,
+    disciplina: disciplina,
+    senha: senha
+};
+
+axios.post(`http://localhost:3000/cadastrarUsuario`, novoUsuario,{
+    headers: {
+        'Content-Type': 'application/json'
+    }
+})
+.then(response => {
+    console.log('usuario cadastrado com sucesso:', response.data)
+
+    $('cadastrarUsuario').modal('hide');
+
+    alert('usuario cadastrado com sucesso')
+
+    buscarDadosEPreencherTabelaAPILocal();
+})
+.catch(error =>{
+    alert('erro ao cadastrar usuario:', error)
+})
+
+
 function atualizarUsuario(){
-    axios.put(`http://infopguaifpr.com.br:3052/atualizarUsuario/${usuario.id}`).then(response =>{
+    axios.put(`http://localhost:3000/atualizarUsuario/${usuario.id}`).then(response =>{
         console.log("Usuario foi editado com sucesso", response.data);
         buscarDadosEPreencherTabela();
     }).catch(error =>{
